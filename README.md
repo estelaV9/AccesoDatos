@@ -120,10 +120,21 @@ Si las sentencias no van a necesitar datos introducidos por el usuario no es nec
      ```
 Por ejemplo :
 ```java
+ String sqlQuery = "SELECT nombre, media FROM alumnos WHERE curso = ? AND media > ?";
+ PreparedStatement statement = connection.prepareStatement(sqlQuery);
+ statement.setString(1, curso);
+ statement.setDouble(2, nota);
+ ResultSet resultSet = statement.executeQuery();
+
+ // RECORRER EL BUCLE PARA MOSTRAR LOS DATOS DE ESA CONSULTA
+ System.out.println("*************ALUMNOS DE " + curso + " CON MAS DE UN " + nota + "**************");
  while (resultSet.next()) {
-    String nombre = resultSet.getString("nombre");
-    String curso = resultSet.getString("curso");
-    Double media = resultSet.getDouble("media");
-    System.out.println("Nombre: " + nombre + ", Curso: " + curso + ", Media: " + media);
-}
+     System.out.println("Nombre del alumno : " + resultSet.getString(1)
+             + " con una media de " + resultSet.getString("media")
+             + "\n----------------------------------------------------------");
+
+ }
 ```
+### Operaciones CRUD y clases DAO.
+ - **CRUD** : CREATE, READ, UPDATE, DELETE.
+ - **DAO** : DATA ACCESS OBJECT, son clases que se ocuparán especificamente del acceso a la base de datos.
