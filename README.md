@@ -69,9 +69,61 @@ Primero se crea un Statement con _**createStatement**_, y después, el método _
  String sqlUpdate = "UPDATE _mytable_ SET _column1_ = 'new value' WHERE _id_ = 1";
  int rowsUpdated = statement.executeUpdate(sqlUpdate) // NOS DEVUELVE EL NUMERO DE FILAS QUE HAN SIDO MODIFICADAS
 ```
+-Ejecución de consultas parametrizadas. 
+**SQL Injection** : Es una vulnerabilidad de seguridad que afecta a las aplicaciones que interactúan con bases de datos. Ocurre cuando los datos proporcionados por el usuario no se validan correctamente antes de ser utilizados en consultas SQL dinámicas. Esto puede permitir a un atacante manipular estas consultas de forma maliciosa.
+Por ejemplo :
+```java
+String sql = "DELETE FROM alumnos where nombre = " + nombre;
+```
+Teniendo esa consulta, si el usuario introduce el nombre de Juan' o que '1' = '1, se eliminarán todos los registros de esa tabla, ya que 1 siempre será igaul a 1.
 
+Para evitar esto se utilizan sentencias parametrizadas.
+ - En vez de utilizar createStatementse usa _**prepareStatement**_.
+ - En la sentencia SQL se indica el parámetro/s a introducir su valor con una _**?**_.
+ - El prepareStatement llama al método _**executeQuery()**_.
+ - Luego se asigna el valor a los parámetros con los métodos:
+    * void setString(int indice, String valor).
+    * void setInt(intindice, int valor).
+    * void setDouble(intindice, double valor).
+    * void setBoolean(intindice, boolean valor).
+    * void setDate(intindice, Date valor).
+ El índice del parámetro empieza en 1.
+Por ejemplo :
+```java
+ String sql = "SELECT nombre, media FROM Alumnos WHERE curso = ? AND media > ?";
+ PreparedStatement statement = connection.prepareStatement(sql);
+ statement.setString(1, curso);
+ statement.setDouble(2, notaCorte);
+ ResultSet resultSet = statement.executeQuery();
+```
+Si las sentencias no van a necesitar datos introducidos por el usuario no es necesario utilizar sentencias parametrizadas, pero siempre es mejor usar este tipo de consultas.
 
-
-
-
-
+### ResultSet
+**Resultset** : es un objeto que representa un conjunto de resultados de una consulta SQL ejecutada sobre una base de datos.
+ - Después de ejecutar una consulta SQL mediante un _**Statement**_ o _**PreparedStatement**_, el resultado se almacena en un objeto **ResultSet**.
+ - Un ResultSet se puede recorrer fila por fila para acceder a los datos de cada registro devuelto por la consulta, como si fuera un iterador.
+ - Los datos devueltos por la consulta se organizan en filas y columnas.
+ - Permite acceder a los valores de cada columna en la fila actual utilizando métodos como
+    * getString().
+    * getInt()
+    * getDouble().
+    * getDate().
+- Para movernos de una fila hacia adelante, hacia atrás o a una posición específica se utiliza métodos como _**next()**_.
+- Como argumento se puede poner :
+   * El nombre de la columna.
+      ```java
+        String sqlQuery  = resultset.getString("_nombre_");
+      ```
+   * El índice de la columna.
+     ```java
+       String sqlQuery  = resultset.getString("1");
+     ```
+Por ejemplo :
+```java
+ while (resultSet.next()) {
+    String nombre = resultSet.getString("nombre");
+    String curso = resultSet.getString("curso");
+    Double media = resultSet.getDouble("media");
+    System.out.println("Nombre: " + nombre + ", Curso: " + curso + ", Media: " + media);
+}
+```
