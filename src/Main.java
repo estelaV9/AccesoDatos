@@ -48,32 +48,5 @@ public class Main {
         int rowsAfectedInjection = statement.executeUpdate(sql);
         System.out.println("Columnas afectadas : " + rowsAfectedInjection);*/
 
-
-
-
-        /**RESULSET --> SE PARECE A UN ITERADOR. **/
-        /*PAGINA 52: EJEMPLO INSTITUTO MOSTRAR ALUMNOS NOTA CORTE
-        A partir de la base de datos creada con el archivo .sql.
-        Escribir un programa que muestre todos los alumnos de un curso cuya nota es mayor que cierta nota de
-        corte. Tanto el curso como la nota de corte será introducido por el usuario.*/
-
-        String curso = "1B";
-        double notaCorte = 5.0;
-        String sqlResulset = "SELECT nombre, media FROM Alumnos WHERE curso" +
-                " = ? AND media > ?";
-        PreparedStatement statementResulset =
-                connection.prepareStatement(sqlResulset);
-        statementResulset.setString(1, curso);
-        statementResulset.setDouble(2, notaCorte);
-        ResultSet resultSetResulset = statementResulset.executeQuery();
-
-        // RECORRER EL BUCLE PARA MOSTRAR LOS DATOS DE ESA CONSULTA
-        System.out.println("*************ALUMNOS DE 1B CON MAS DE UN 5**************");
-        while(resultSetResulset.next()){
-            System.out.println("Nombre del alumno : " + resultSetResulset.getString(1)
-                    + " con una media de "  + resultSetResulset.getString("media")
-                    + "\n----------------------------------------------------------");
-        }
-
     }
 }
